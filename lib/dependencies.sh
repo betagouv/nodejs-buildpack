@@ -142,11 +142,16 @@ yarn_node_modules() {
 
 yarn_2_install() {
   local build_dir=${1:-}
+  local immutable=${YARN_ENABLE_IMMUTABLE_INSTALLS:-true}
 
   echo "Running 'yarn install' with yarn.lock"
   cd "$build_dir" || return
 
-  monitor "yarn-2-install" yarn install --immutable 2>&1
+  if [[ "$immutable" == "false" ]]; then
+    monitor "yarn-2-install" yarn install 2>&1
+  else
+    monitor "yarn-2-install" yarn install --immutable 2>&1
+  fi
 }
 
 yarn_prune_devdependencies() {
